@@ -1,0 +1,640 @@
+<html><head><meta http-equiv="Content-Type" content="text/html; charset=utf-8"/><title>Distributed Attendance System</title><style>
+/* webkit printing magic: print all background colors */
+html {
+	-webkit-print-color-adjust: exact;
+}
+* {
+	box-sizing: border-box;
+	-webkit-print-color-adjust: exact;
+}
+
+html,
+body {
+	margin: 0;
+	padding: 0;
+}
+@media only screen {
+	body {
+		margin: 2em auto;
+		max-width: 900px;
+		color: rgb(55, 53, 47);
+	}
+}
+
+body {
+	line-height: 1.5;
+	white-space: pre-wrap;
+}
+
+a,
+a.visited {
+	color: inherit;
+	text-decoration: underline;
+}
+
+.pdf-relative-link-path {
+	font-size: 80%;
+	color: #444;
+}
+
+h1,
+h2,
+h3 {
+	letter-spacing: -0.01em;
+	line-height: 1.2;
+	font-weight: 600;
+	margin-bottom: 0;
+}
+
+.page-title {
+	font-size: 2.5rem;
+	font-weight: 700;
+	margin-top: 0;
+	margin-bottom: 0.75em;
+}
+
+h1 {
+	font-size: 1.875rem;
+	margin-top: 1.875rem;
+}
+
+h2 {
+	font-size: 1.5rem;
+	margin-top: 1.5rem;
+}
+
+h3 {
+	font-size: 1.25rem;
+	margin-top: 1.25rem;
+}
+
+.source {
+	border: 1px solid #ddd;
+	border-radius: 3px;
+	padding: 1.5em;
+	word-break: break-all;
+}
+
+.callout {
+	border-radius: 3px;
+	padding: 1rem;
+}
+
+figure {
+	margin: 1.25em 0;
+	page-break-inside: avoid;
+}
+
+figcaption {
+	opacity: 0.5;
+	font-size: 85%;
+	margin-top: 0.5em;
+}
+
+mark {
+	background-color: transparent;
+}
+
+.indented {
+	padding-left: 1.5em;
+}
+
+hr {
+	background: transparent;
+	display: block;
+	width: 100%;
+	height: 1px;
+	visibility: visible;
+	border: none;
+	border-bottom: 1px solid rgba(55, 53, 47, 0.09);
+}
+
+img {
+	max-width: 100%;
+}
+
+@media only print {
+	img {
+		max-height: 100vh;
+		object-fit: contain;
+	}
+}
+
+@page {
+	margin: 1in;
+}
+
+.collection-content {
+	font-size: 0.875rem;
+}
+
+.column-list {
+	display: flex;
+	justify-content: space-between;
+}
+
+.column {
+	padding: 0 1em;
+}
+
+.column:first-child {
+	padding-left: 0;
+}
+
+.column:last-child {
+	padding-right: 0;
+}
+
+.table_of_contents-item {
+	display: block;
+	font-size: 0.875rem;
+	line-height: 1.3;
+	padding: 0.125rem;
+}
+
+.table_of_contents-indent-1 {
+	margin-left: 1.5rem;
+}
+
+.table_of_contents-indent-2 {
+	margin-left: 3rem;
+}
+
+.table_of_contents-indent-3 {
+	margin-left: 4.5rem;
+}
+
+.table_of_contents-link {
+	text-decoration: none;
+	opacity: 0.7;
+	border-bottom: 1px solid rgba(55, 53, 47, 0.18);
+}
+
+table,
+th,
+td {
+	border: 1px solid rgba(55, 53, 47, 0.09);
+	border-collapse: collapse;
+}
+
+table {
+	border-left: none;
+	border-right: none;
+}
+
+th,
+td {
+	font-weight: normal;
+	padding: 0.25em 0.5em;
+	line-height: 1.5;
+	min-height: 1.5em;
+	text-align: left;
+}
+
+th {
+	color: rgba(55, 53, 47, 0.6);
+}
+
+ol,
+ul {
+	margin: 0;
+	margin-block-start: 0.6em;
+	margin-block-end: 0.6em;
+}
+
+li > ol:first-child,
+li > ul:first-child {
+	margin-block-start: 0.6em;
+}
+
+ul > li {
+	list-style: disc;
+}
+
+ul.to-do-list {
+	text-indent: -1.7em;
+}
+
+ul.to-do-list > li {
+	list-style: none;
+}
+
+.to-do-children-checked {
+	text-decoration: line-through;
+	opacity: 0.375;
+}
+
+ul.toggle > li {
+	list-style: none;
+}
+
+ul {
+	padding-inline-start: 1.7em;
+}
+
+ul > li {
+	padding-left: 0.1em;
+}
+
+ol {
+	padding-inline-start: 1.6em;
+}
+
+ol > li {
+	padding-left: 0.2em;
+}
+
+.mono ol {
+	padding-inline-start: 2em;
+}
+
+.mono ol > li {
+	text-indent: -0.4em;
+}
+
+.toggle {
+	padding-inline-start: 0em;
+	list-style-type: none;
+}
+
+/* Indent toggle children */
+.toggle > li > details {
+	padding-left: 1.7em;
+}
+
+.toggle > li > details > summary {
+	margin-left: -1.1em;
+}
+
+.selected-value {
+	display: inline-block;
+	padding: 0 0.5em;
+	background: rgba(206, 205, 202, 0.5);
+	border-radius: 3px;
+	margin-right: 0.5em;
+	margin-top: 0.3em;
+	margin-bottom: 0.3em;
+	white-space: nowrap;
+}
+
+.collection-title {
+	display: inline-block;
+	margin-right: 1em;
+}
+
+time {
+	opacity: 0.5;
+}
+
+.icon {
+	display: inline-block;
+	max-width: 1.2em;
+	max-height: 1.2em;
+	text-decoration: none;
+	vertical-align: text-bottom;
+	margin-right: 0.5em;
+}
+
+img.icon {
+	border-radius: 3px;
+}
+
+.user-icon {
+	width: 1.5em;
+	height: 1.5em;
+	border-radius: 100%;
+	margin-right: 0.5rem;
+}
+
+.user-icon-inner {
+	font-size: 0.8em;
+}
+
+.text-icon {
+	border: 1px solid #000;
+	text-align: center;
+}
+
+.page-cover-image {
+	display: block;
+	object-fit: cover;
+	width: 100%;
+	height: 30vh;
+}
+
+.page-header-icon {
+	font-size: 3rem;
+	margin-bottom: 1rem;
+}
+
+.page-header-icon-with-cover {
+	margin-top: -0.72em;
+	margin-left: 0.07em;
+}
+
+.page-header-icon img {
+	border-radius: 3px;
+}
+
+.link-to-page {
+	margin: 1em 0;
+	padding: 0;
+	border: none;
+	font-weight: 500;
+}
+
+p > .user {
+	opacity: 0.5;
+}
+
+td > .user,
+td > time {
+	white-space: nowrap;
+}
+
+input[type="checkbox"] {
+	transform: scale(1.5);
+	margin-right: 0.6em;
+	vertical-align: middle;
+}
+
+p {
+	margin-top: 0.5em;
+	margin-bottom: 0.5em;
+}
+
+.image {
+	border: none;
+	margin: 1.5em 0;
+	padding: 0;
+	border-radius: 0;
+	text-align: center;
+}
+
+.code,
+code {
+	background: rgba(135, 131, 120, 0.15);
+	border-radius: 3px;
+	padding: 0.2em 0.4em;
+	border-radius: 3px;
+	font-size: 85%;
+	tab-size: 2;
+}
+
+code {
+	color: #eb5757;
+}
+
+.code {
+	padding: 1.5em 1em;
+}
+
+.code-wrap {
+	white-space: pre-wrap;
+	word-break: break-all;
+}
+
+.code > code {
+	background: none;
+	padding: 0;
+	font-size: 100%;
+	color: inherit;
+}
+
+blockquote {
+	font-size: 1.25em;
+	margin: 1em 0;
+	padding-left: 1em;
+	border-left: 3px solid rgb(55, 53, 47);
+}
+
+.bookmark {
+	text-decoration: none;
+	max-height: 8em;
+	padding: 0;
+	display: flex;
+	width: 100%;
+	align-items: stretch;
+}
+
+.bookmark-title {
+	font-size: 0.85em;
+	overflow: hidden;
+	text-overflow: ellipsis;
+	height: 1.75em;
+	white-space: nowrap;
+}
+
+.bookmark-text {
+	display: flex;
+	flex-direction: column;
+}
+
+.bookmark-info {
+	flex: 4 1 180px;
+	padding: 12px 14px 14px;
+	display: flex;
+	flex-direction: column;
+	justify-content: space-between;
+}
+
+.bookmark-image {
+	width: 33%;
+	flex: 1 1 180px;
+	display: block;
+	position: relative;
+	object-fit: cover;
+	border-radius: 1px;
+}
+
+.bookmark-description {
+	color: rgba(55, 53, 47, 0.6);
+	font-size: 0.75em;
+	overflow: hidden;
+	max-height: 4.5em;
+	word-break: break-word;
+}
+
+.bookmark-href {
+	font-size: 0.75em;
+	margin-top: 0.25em;
+}
+
+.sans { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, "Apple Color Emoji", Arial, sans-serif, "Segoe UI Emoji", "Segoe UI Symbol"; }
+.code { font-family: "SFMono-Regular", Consolas, "Liberation Mono", Menlo, Courier, monospace; }
+.serif { font-family: Lyon-Text, Georgia, YuMincho, "Yu Mincho", "Hiragino Mincho ProN", "Hiragino Mincho Pro", "Songti TC", "Songti SC", "SimSun", "Nanum Myeongjo", NanumMyeongjo, Batang, serif; }
+.mono { font-family: iawriter-mono, Nitti, Menlo, Courier, monospace; }
+.pdf .sans { font-family: Inter, -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, "Apple Color Emoji", Arial, sans-serif, "Segoe UI Emoji", "Segoe UI Symbol", 'Twemoji', 'Noto Color Emoji', 'Noto Sans CJK SC', 'Noto Sans CJK KR'; }
+
+.pdf .code { font-family: Source Code Pro, "SFMono-Regular", Consolas, "Liberation Mono", Menlo, Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK SC', 'Noto Sans Mono CJK KR'; }
+
+.pdf .serif { font-family: PT Serif, Lyon-Text, Georgia, YuMincho, "Yu Mincho", "Hiragino Mincho ProN", "Hiragino Mincho Pro", "Songti TC", "Songti SC", "SimSun", "Nanum Myeongjo", NanumMyeongjo, Batang, serif, 'Twemoji', 'Noto Color Emoji', 'Noto Sans CJK SC', 'Noto Sans CJK KR'; }
+
+.pdf .mono { font-family: PT Mono, iawriter-mono, Nitti, Menlo, Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK SC', 'Noto Sans Mono CJK KR'; }
+
+.highlight-default {
+}
+.highlight-gray {
+	color: rgb(155,154,151);
+}
+.highlight-brown {
+	color: rgb(100,71,58);
+}
+.highlight-orange {
+	color: rgb(217,115,13);
+}
+.highlight-yellow {
+	color: rgb(223,171,1);
+}
+.highlight-teal {
+	color: rgb(15,123,108);
+}
+.highlight-blue {
+	color: rgb(11,110,153);
+}
+.highlight-purple {
+	color: rgb(105,64,165);
+}
+.highlight-pink {
+	color: rgb(173,26,114);
+}
+.highlight-red {
+	color: rgb(224,62,62);
+}
+.highlight-gray_background {
+	background: rgb(235,236,237);
+}
+.highlight-brown_background {
+	background: rgb(233,229,227);
+}
+.highlight-orange_background {
+	background: rgb(250,235,221);
+}
+.highlight-yellow_background {
+	background: rgb(251,243,219);
+}
+.highlight-teal_background {
+	background: rgb(221,237,234);
+}
+.highlight-blue_background {
+	background: rgb(221,235,241);
+}
+.highlight-purple_background {
+	background: rgb(234,228,242);
+}
+.highlight-pink_background {
+	background: rgb(244,223,235);
+}
+.highlight-red_background {
+	background: rgb(251,228,228);
+}
+.block-color-default {
+	color: inherit;
+	fill: inherit;
+}
+.block-color-gray {
+	color: rgba(55, 53, 47, 0.6);
+	fill: rgba(55, 53, 47, 0.6);
+}
+.block-color-brown {
+	color: rgb(100,71,58);
+	fill: rgb(100,71,58);
+}
+.block-color-orange {
+	color: rgb(217,115,13);
+	fill: rgb(217,115,13);
+}
+.block-color-yellow {
+	color: rgb(223,171,1);
+	fill: rgb(223,171,1);
+}
+.block-color-teal {
+	color: rgb(15,123,108);
+	fill: rgb(15,123,108);
+}
+.block-color-blue {
+	color: rgb(11,110,153);
+	fill: rgb(11,110,153);
+}
+.block-color-purple {
+	color: rgb(105,64,165);
+	fill: rgb(105,64,165);
+}
+.block-color-pink {
+	color: rgb(173,26,114);
+	fill: rgb(173,26,114);
+}
+.block-color-red {
+	color: rgb(224,62,62);
+	fill: rgb(224,62,62);
+}
+.block-color-gray_background {
+	background: rgb(235,236,237);
+}
+.block-color-brown_background {
+	background: rgb(233,229,227);
+}
+.block-color-orange_background {
+	background: rgb(250,235,221);
+}
+.block-color-yellow_background {
+	background: rgb(251,243,219);
+}
+.block-color-teal_background {
+	background: rgb(221,237,234);
+}
+.block-color-blue_background {
+	background: rgb(221,235,241);
+}
+.block-color-purple_background {
+	background: rgb(234,228,242);
+}
+.block-color-pink_background {
+	background: rgb(244,223,235);
+}
+.block-color-red_background {
+	background: rgb(251,228,228);
+}
+.select-value-color-default { background-color: rgba(206,205,202,0.5); }
+.select-value-color-gray { background-color: rgba(155,154,151, 0.4); }
+.select-value-color-brown { background-color: rgba(140,46,0,0.2); }
+.select-value-color-orange { background-color: rgba(245,93,0,0.2); }
+.select-value-color-yellow { background-color: rgba(233,168,0,0.2); }
+.select-value-color-green { background-color: rgba(0,135,107,0.2); }
+.select-value-color-blue { background-color: rgba(0,120,223,0.2); }
+.select-value-color-purple { background-color: rgba(103,36,222,0.2); }
+.select-value-color-pink { background-color: rgba(221,0,129,0.2); }
+.select-value-color-red { background-color: rgba(255,0,26,0.2); }
+
+.checkbox {
+	display: inline-flex;
+	vertical-align: text-bottom;
+	width: 16;
+	height: 16;
+	background-size: 16px;
+	margin-left: 2px;
+	margin-right: 5px;
+}
+
+.checkbox-on {
+	background-image: url("data:image/svg+xml;charset=UTF-8,%3Csvg%20width%3D%2216%22%20height%3D%2216%22%20viewBox%3D%220%200%2016%2016%22%20fill%3D%22none%22%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%3E%0A%3Crect%20width%3D%2216%22%20height%3D%2216%22%20fill%3D%22%2358A9D7%22%2F%3E%0A%3Cpath%20d%3D%22M6.71429%2012.2852L14%204.9995L12.7143%203.71436L6.71429%209.71378L3.28571%206.2831L2%207.57092L6.71429%2012.2852Z%22%20fill%3D%22white%22%2F%3E%0A%3C%2Fsvg%3E");
+}
+
+.checkbox-off {
+	background-image: url("data:image/svg+xml;charset=UTF-8,%3Csvg%20width%3D%2216%22%20height%3D%2216%22%20viewBox%3D%220%200%2016%2016%22%20fill%3D%22none%22%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%3E%0A%3Crect%20x%3D%220.75%22%20y%3D%220.75%22%20width%3D%2214.5%22%20height%3D%2214.5%22%20fill%3D%22white%22%20stroke%3D%22%2336352F%22%20stroke-width%3D%221.5%22%2F%3E%0A%3C%2Fsvg%3E");
+}
+	
+</style></head><body><article id="54cbbcd5-1313-4894-802a-2cf7ce6d6eab" class="page sans"><header><img class="page-cover-image" src="https://www.notion.so/images/page-cover/solid_blue.png" style="object-position:center 40%"/><h1 class="page-title">Distributed Attendance System</h1></header><div class="page-body"><hr id="1e9c69c9-ca55-4af5-93eb-0f7e91ce94ba"/><blockquote id="068bf191-3456-49f3-904d-22bab779ce05" class="">How to download and use the app? Please refer to the sections below.</blockquote><h1 id="83c3a232-5f30-4666-968e-3eb0d1633cef" class="block-color-blue">iOS Users:</h1><p id="a1771099-663e-4173-9300-db1aa397b42b" class="">
+</p><figure id="4ea79f6d-fbf7-47b7-b50e-0a907d849060" class="image"><a href="Distributed%20Attendance%20System%204ea79f6dfbf747b7b50e0a907d849060/Untitled.png"><img style="width:598px" src="Distributed%20Attendance%20System%204ea79f6dfbf747b7b50e0a907d849060/Untitled.png"/></a></figure><p id="c31c3b19-994d-4c62-88a5-378677a2671c" class="">Step1: </p><p id="ffd19ac4-519e-4b67-8a8e-ed60cf3aa773" class="">Download the TestFlight app from the AppStore using the following URL:  <a href="https://apps.apple.com/us/app/testflight/id899247664">https://apps.apple.com/us/app/testflight/id899247664</a></p><p id="9efd621f-0b69-49bb-8d98-ea8a8a698e99" class="">
+</p><figure id="711e3564-e3e7-4e11-84ae-1919d950c687" class="image"><a href="Distributed%20Attendance%20System%204ea79f6dfbf747b7b50e0a907d849060/74C45909-CD11-43B3-BBB1-ECB930F45653.png"><img style="width:384px" src="Distributed%20Attendance%20System%204ea79f6dfbf747b7b50e0a907d849060/74C45909-CD11-43B3-BBB1-ECB930F45653.png"/></a></figure><p id="8e6ada07-4801-4409-9b9b-941d906025d0" class="">
+</p><p id="60af0470-7430-4d18-a25b-d7e1b76ec11d" class="">Step2:</p><p id="1007f2c7-ae1d-4193-806e-a79303093ecb" class="">Download the Distributed Attendance System BETA application from the following URL: </p><p id="a4d728d4-3bdd-411c-b2eb-af58aadbe354" class=""><a href="https://testflight.apple.com/join/S9Fe8yt6">https://testflight.apple.com/join/S9Fe8yt6</a></p><p id="80a2729e-896f-406a-8489-4e1c565e9191" class="">
+</p><figure id="05195982-58c3-4c68-8483-b95a90041768" class="image"><a href="Distributed%20Attendance%20System%204ea79f6dfbf747b7b50e0a907d849060/1A677B77-3DA0-4FAA-AB42-1F5111E8A2E4.png"><img style="width:384px" src="Distributed%20Attendance%20System%204ea79f6dfbf747b7b50e0a907d849060/1A677B77-3DA0-4FAA-AB42-1F5111E8A2E4.png"/></a></figure><p id="e3af0fa6-8b7a-4599-b1b8-d375714bad62" class="">
+</p><p id="4d5113d4-f821-4950-9086-866647d76fa5" class="">Step3:</p><p id="9f28e54b-976a-4040-904b-3693d11bf594" class="">Install the Distributed Attendance System application and Register yourself using your VIT email, Register number, Name and password. Once you have registered you can verify your email through your Gmail. The verification mail can go to the spam so be sure to check there.</p><p id="eb22061b-accd-43f3-8aa2-52e17695f029" class="">
+</p><p id="1da2cdfc-210d-47fb-8079-e826fb292dc6" class="">Step4: </p><p id="7a5f8c6f-0657-405e-8423-3007a49889b8" class="">Login using the credentials created - namely register number and password. </p><p id="894191b7-5639-4b24-afbb-7a809d2820f4" class="">
+</p><p id="67f8d819-ddd7-463c-8aa1-844312a67768" class="">Step5:</p><p id="8f878614-7f57-4a0b-9e2c-ea7c5ea7de43" class="">Enjoy using the D.A.S Application and make sure you give us BETA feedback and screenshots of bugs if exists. You can send bugs by screenshotting within the application and pressing the share button on top right near the trash icon. In the options click &quot;Share Beta Feedback&quot; and write your review and submit.</p><p id="b01b2df3-6e82-4e8f-be0a-f134e2611ed5" class="">
+</p><figure id="54281104-f28a-4b30-a644-8e29ce4895a0" class="image"><a href="Distributed%20Attendance%20System%204ea79f6dfbf747b7b50e0a907d849060/03C9DB06-AD31-4BB1-B0FC-1AD66170EC03.png"><img style="width:384px" src="Distributed%20Attendance%20System%204ea79f6dfbf747b7b50e0a907d849060/03C9DB06-AD31-4BB1-B0FC-1AD66170EC03.png"/></a></figure><h1 id="8409ddc6-6473-4f8c-adf9-b6f95992693f" class="block-color-blue">Android Users:</h1><p id="1ab4acb6-1d15-4374-bf35-90fdb4db9bc3" class="">Step1: </p><p id="411e869a-9b8a-454f-8a75-2c9362525749" class="">Install the application from the APK file from this drive.</p><p id="59300c36-cd32-4bb1-9c30-e0e96d13f374" class=""><a href="https://drive.google.com/file/d/128JHFQL3s4HMKHwH9EQ9WynBZNkHOzbb/view?usp=sharing">https://drive.google.com/file/d/128JHFQL3s4HMKHwH9EQ9WynBZNkHOzbb/view?usp=sharing</a></p><p id="aa01f8d6-327c-44b8-9426-7ced8a292f57" class="">
+</p><p id="021f2c8a-3106-4176-9ac0-c7378d405525" class="">Step2: </p><p id="92a32bf2-1b13-4572-9136-557b6d5881d9" class="">Install the Distributed Attendance System application and Register yourself using your VIT email, Register number, Name and password. Once you have registered you can verify your email through your Gmail. The verification mail can go to the spam so be sure to check there.</p><p id="718b82f6-0b76-4450-a56a-8616fe54fb48" class="">
+</p><p id="74c0c3e8-2be5-4bf9-b5ca-08f9fe2eff62" class="">Step3: </p><p id="5b5008b5-1b9e-41ec-8fc8-6236ff3226ab" class="">Login using the credentials created - namely register number and password. </p><p id="2d1a9f9b-c45f-4720-bafc-5e88b406c2f1" class="">
+</p><p id="d97e1d28-c671-4674-882e-40ec0e14312d" class="">Step4:</p><p id="cdf41cab-df79-4564-9c7b-a99b9d3fdc7c" class="">Enjoy using the D.A.S Application. Report the bugs to this email → <a href="mailto:gauthamperam@gmail.com">gauthamperam@gmail.com</a></p><p id="6e6a79e1-46c4-499b-954e-26ab980e5e61" class="">
+</p><p id="f7d02452-782f-4fd6-8eb3-e1130b088a77" class="">
+</p></div></article></body></html>
